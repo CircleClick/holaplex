@@ -1,8 +1,7 @@
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline';
 import { VFC } from 'react';
 import HomeSection from './HomeSection';
 import MarketplacePreview from './MarketplacePreview';
-import Carousel from 'react-grid-carousel';
+import { HomeSectionCarousel } from './HomeSectionCarousel';
 
 const previewSubdomains: string[] = [
   'junglecats',
@@ -19,22 +18,6 @@ const previewSubdomains: string[] = [
   'paragon',
 ];
 
-const PageLeftButton = (
-  <button
-    className="flex items-center justify-center absolute left-0 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-900 stroke-white p-1 shadow shadow-black hover:scale-125 transition"
-  >
-    <ChevronLeftIcon className="h-4 w-4" />
-  </button>
-);
-
-const PageRightButton = (
-  <button
-    className="flex items-center justify-center absolute right-0 top-1/2 h-10 w-10 translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-900 stroke-white p-1 shadow shadow-black hover:scale-125 transition"
-  >
-    <ChevronRightIcon className="h-4 w-4" />
-  </button>
-);
-
 const FeaturedMarkeplacesSection: VFC = () => {
   return (
     <HomeSection>
@@ -45,21 +28,15 @@ const FeaturedMarkeplacesSection: VFC = () => {
         </HomeSection.HeaderAction>
       </HomeSection.Header>
       <HomeSection.Body>
-        <Carousel
-          cols={3}
-          rows={2}
-          gap={0}
-          arrowLeft={PageLeftButton}
-          arrowRight={PageRightButton}
-        >
+        <HomeSectionCarousel cols={3} rows={2}>
           {previewSubdomains.map((s) => (
-            <Carousel.Item key={s}>
+            <HomeSectionCarousel.Item key={s}>
               <div key={s} className="aspect-[16/10] w-full p-2">
                 <MarketplacePreview subdomain={s} />
               </div>
-            </Carousel.Item>
+            </HomeSectionCarousel.Item>
           ))}
-        </Carousel>
+        </HomeSectionCarousel>
       </HomeSection.Body>
     </HomeSection>
   );
