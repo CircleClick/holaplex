@@ -79,7 +79,13 @@ export const NFTCard = ({
   loading: boolean;
 }) => {
   const { publicKey } = useWallet();
-  const creatorsCopy = [...nft.creators];
+  const [listNFTVisibility, setListNFTVisibility] = useState(false);
+  const [updateListingVisibility, setUpdateListingVisibility] = useState(false);
+  const [updateOfferVisibility, setUpdateOfferVisibility] = useState(false);
+  
+  if (loading) return <LoadingNFTCard/>;
+
+  const creatorsCopy = [...nft?.creators];
   const sortedCreators = creatorsCopy.sort((a, b) => b.share - a.share);
   const shownCreatorAddress = sortedCreators.length > 0 ? sortedCreators[0].address : null;
 
@@ -94,10 +100,6 @@ export const NFTCard = ({
   );
   const hasDefaultListing = Boolean(defaultListing);
   const lastSale = nft?.purchases?.[0]?.price;
-
-  const [listNFTVisibility, setListNFTVisibility] = useState(false);
-  const [updateListingVisibility, setUpdateListingVisibility] = useState(false);
-  const [updateOfferVisibility, setUpdateOfferVisibility] = useState(false);
 
   return (
     <>
