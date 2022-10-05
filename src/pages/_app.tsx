@@ -118,7 +118,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
                       <StorefrontProvider>
                         <MarketplaceProvider>
                           <AnalyticsProvider>
-                            <AppHeader />
+                            <AppHeader {...pageProps} />
                             <MailboxProvider>
                               <PageLayout {...pageProps}>
                                 <Component {...pageProps} />

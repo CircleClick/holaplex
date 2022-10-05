@@ -1,33 +1,13 @@
-import { QueryContext } from '@/hooks/useApolloQuery';
-import {
-  FeaturedBuyNowListingsData,
-  FeaturedBuyNowListingsSection,
-} from '@/views/home/FeaturedBuyNowListingsSection';
-import {
-  FeaturedCollectionsByMarketCapData,
-  FeaturedCollectionsByMarketCapSection,
-} from '@/views/home/FeaturedCollectionsByMarketCapSection';
-import {
-  FeaturedCollectionsByVolumeData,
-  FeaturedCollectionsByVolumeSection,
-} from '@/views/home/FeaturedCollectionsByVolumeSection';
-import {
-  FeaturedMarketplacesData,
-  FeaturedMarketplacesSection,
-} from '@/views/home/FeaturedMarketplacesSection';
-import {
-  FeaturedProfilesData,
-  FeaturedProfilesSection,
-} from '@/views/home/FeaturedProfilesSection';
-import Footer from '@/views/home/Footer';
-import { DateTime } from 'luxon';
-import { HeroSection, HeroSectionData } from '@/views/home/HeroSection';
-import { useHomeQueryWithTransforms } from '@/views/home/home.hooks';
+import { FeaturedBuyNowListingsData } from '@/views/home/FeaturedBuyNowListingsSection';
+import { FeaturedCollectionsByMarketCapData } from '@/views/home/FeaturedCollectionsByMarketCapSection';
+import { FeaturedCollectionsByVolumeData } from '@/views/home/FeaturedCollectionsByVolumeSection';
+import { FeaturedMarketplacesData } from '@/views/home/FeaturedMarketplacesSection';
+import { FeaturedProfilesData } from '@/views/home/FeaturedProfilesSection';
+import { HeroSectionData } from '@/views/home/HeroSection';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline';
-import { useWallet } from '@solana/wallet-adapter-react';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { FC, ReactNode, useMemo } from 'react';
+import { FC, ReactNode } from 'react';
 import Carousel from 'react-grid-carousel';
 
 export interface HomeData {
@@ -38,76 +18,6 @@ export interface HomeData {
   featuredProfiles: FeaturedProfilesData;
   featuredMarketplaces: FeaturedMarketplacesData;
 }
-
-export default function Home(): JSX.Element {
-  const wallet = useWallet();
-
-  const timeIntervales = useMemo(() => {
-    const now = DateTime.now();
-    const dayAgo = now.minus({ days: 1 }).startOf('day');
-    const nowUTC = now.startOf('day').toUTC().toString();
-    const dayAgoUTC = dayAgo.toUTC().toString();
-
-    return { startDate: dayAgoUTC, endDate: nowUTC };
-  }, []);
-
-  //TODO export n-items in consts from sections
-  const dataQueryContext: QueryContext<HomeData> = useHomeQueryWithTransforms(
-    wallet.publicKey,
-    {
-      featuredCollectionsLimit: 22, // we need 18, but some get filtered out so increasing max
-      featuredProfileLimit: 24,
-      featuredBowNowLimit: 24,
-      feedEventsLimit: 12,
-    },
-    timeIntervales
-  );
-
-  return (
-    <div>
-      <HeroSection
-        context={{
-          ...dataQueryContext,
-          data: dataQueryContext.data?.feedEvents,
-        }}
-      />
-      <div className="container mx-auto px-6">
-        <FeaturedCollectionsByVolumeSection
-          context={{
-            ...dataQueryContext,
-            data: dataQueryContext.data?.featuredCollectionsByVolume,
-          }}
-        />
-        <FeaturedCollectionsByMarketCapSection
-          context={{
-            ...dataQueryContext,
-            data: dataQueryContext.data?.featuredCollectionsByMarketCap,
-          }}
-        />
-        <FeaturedBuyNowListingsSection
-          context={{
-            ...dataQueryContext,
-            data: dataQueryContext.data?.featuredBuyNowListings,
-          }}
-        />
-        <FeaturedProfilesSection
-          context={{
-            ...dataQueryContext,
-            data: dataQueryContext.data?.featuredProfiles,
-          }}
-        />
-        <FeaturedMarketplacesSection
-          context={{
-            ...dataQueryContext,
-            data: dataQueryContext.data?.featuredMarketplaces,
-          }}
-        />
-      </div>
-      <Footer />
-    </div>
-  );
-}
-
 interface HomeLinkProps {
   href: string;
 }
@@ -250,3 +160,27 @@ const HomeSectionCarouselItem: Item = ({ children, className }) => (
 // https://github.com/x3388638/react-grid-carousel/blob/master/src/components/Carousel.js#L206-L212
 HomeSectionCarouselItem.displayName = 'CAROUSEL_ITEM';
 HomeSectionCarousel.Item = HomeSectionCarouselItem;
+
+export default function Home(): JSX.Element {
+  return (
+    <div className="relative h-screen w-full items-center justify-center bg-[#030E37] lg:flex">
+      <div className="absolute top-1/4 left-0 h-24 w-96 max-w-full rounded-full bg-[#6680F8] blur-[120px] lg:left-[10%]" />
+      <div className="absolute bottom-1/4 left-0 h-48 w-24 max-w-full rounded-full bg-[#B4419F] blur-[120px] lg:left-[10%]" />
+      <div className="absolute bottom-1/3 right-0 h-48 w-24 max-w-full rounded-full bg-[#B4419F] blur-[120px] lg:right-[10%]" />
+      <div className="max-w-full p-4 lg:w-1/2">
+        <h1 className="text-2xl md:text-4xl lg:text-6xl">Evolution In Progress...</h1>
+        <p>Building the tools for an open-source, decentralized, and permissionless web3.</p>
+      </div>
+      <img className="lg:w-1/2" src="/images/splash-image.svg" width="1153" height="1066" />
+    </div>
+  );
+}
+
+export function getStaticProps() {
+  return {
+    props: {
+      noHeader: true,
+      noFooter: true,
+    },
+  };
+}

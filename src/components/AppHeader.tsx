@@ -23,7 +23,9 @@ import SearchBar from '@/views/_global/SearchBar';
 
 const WHICHDAO = process.env.NEXT_PUBLIC_WHICHDAO;
 
-export function AppHeader() {
+export function AppHeader(props: any) {
+  if (props.noHeader === true) return <></>;
+
   const router = useRouter();
 
   const { connected, wallet: userWallet, publicKey, connecting } = useWallet();
